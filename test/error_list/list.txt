@@ -1,0 +1,9 @@
+1. 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "/xml/set-xml/application.xml") 관련 에러
+
+java.lang.ClassNotFoundException: org.springframework.core.annotation.AnnotatedElementUtils
+
+spring / spring-context / spring-test 의 버전 문제였다 ....
+
++ 에러 코드를 볼시 맨 윗줄뿐 아니라 중간에러도 확인해 볼것 .
