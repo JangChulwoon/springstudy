@@ -15,8 +15,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import ioc_Test.User;
-import ioc_Test.UserDao;
+import bean.User;
+import dao.UserDao;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
