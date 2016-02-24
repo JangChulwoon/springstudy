@@ -14,14 +14,20 @@ public class UserDao {
 	private Connection con = null;
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
+	private JdbcContext context = null;
 
 	public void setDatasource(DataSource datasource) {
 		this.datasource = datasource;
 	}
-
+	public void setContext(JdbcContext context) {
+		this.context = context;
+	}
+	// context 도 주입해야되는구나 ? 
+	
 	// final 로 써야되는 이유 ???
 	public void add(final User user) throws SQLException {
-		class AddStatement implements StatementStrategy {
+		// 익명 클래스
+		StatementStrategy stmt = new StatementStrategy() {
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
 				// TODO Auto-generated method stub
@@ -31,10 +37,12 @@ public class UserDao {
 				ps.setString(3, user.getPass());
 				return ps;
 			}
-		}
-		StatementStrategy stmt = new AddStatement();
-		jdbcContextWithStatementStrategy(stmt);
+		};
+		
+		this.context.workWithStatementStrategy(stmt);
 	}
+
+	
 
 	public User get(String id) throws SQLException {
 		con = datasource.getConnection();
@@ -59,39 +67,11 @@ public class UserDao {
 		return user;
 	}
 
-	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-		// 클라이언트가 object 를 주입 해주면 그거에 맞춰 실행된다.
-		try {
-			con = datasource.getConnection();
-			// 여기서 이미 deleteAll이 나타나 잇어서 ocp에 맞지 않음
-			ps = stmt.makePreparedStatement(con);
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-
-			}
-
-		}
-	}
 
 	// 얘가 클라이 언트가 됨.
 	public void deletAll() throws SQLException {
 		// 내부 클래스 (로컬 클래스)
-		class DeleteAllStatmenent implements StatementStrategy {
+		StatementStrategy stmt = new StatementStrategy() {
 
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
@@ -100,11 +80,8 @@ public class UserDao {
 				return ps;
 				// 쿼리가 담긴 ps 를 반환
 			}
-
-		}
-
-		StatementStrategy stmt = new DeleteAllStatmenent();
-		jdbcContextWithStatementStrategy(stmt);
+		};
+		this.context.workWithStatementStrategy(stmt);
 	}
 
 	public int getCount() throws SQLException {
