@@ -67,22 +67,13 @@ public class UserDao {
 		return user;
 	}
 
-
 	// 얘가 클라이 언트가 됨.
 	public void deletAll() throws SQLException {
 		// 내부 클래스 (로컬 클래스)
-		StatementStrategy stmt = new StatementStrategy() {
-
-			@Override
-			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-				// TODO Auto-generated method stub
-				PreparedStatement ps = c.prepareStatement("delete from users");
-				return ps;
-				// 쿼리가 담긴 ps 를 반환
-			}
-		};
-		this.context.workWithStatementStrategy(stmt);
+		this.context.executeSql("delete from users");
+		
 	}
+	
 
 	public int getCount() throws SQLException {
 		int count = 0;
