@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,4 +28,10 @@ public class CalcSumtest {
 	public void multiplyOfNumbers() throws IOException {
 		assertThat(calc.calcMultiply(this.numFilepath), is(24));
 	}
+	
+	@Test
+	public void concatenateStrings() throws IOException {
+		assertThat(calc.concatenate(this.numFilepath), is("1234"));
+	}
+
 }
