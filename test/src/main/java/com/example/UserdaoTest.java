@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,9 +36,9 @@ public class UserdaoTest {
 	@Before
 	public void setUp() {
 		// context 가 반복해서 만들어 지기 때문에 , 이게 많아지면 시간이 상승 ! 어떻게 해결 ?
-		user1 = new User("id", "장철1운", "1234");
-		user2 = new User("id1", "장철운", "1234");
-		user3 = new User("id12", "장철운", "1234");
+		user1 = new User("qyumee", "장철1운", "1234");
+		user2 = new User("leegw700", "장철운", "1234");
+		user3 = new User("bumjin", "장철운", "1234");
 
 	}
 
@@ -79,4 +80,35 @@ public class UserdaoTest {
 		dao.get("unknown_id");
 	}
 
+	@Test
+	public void getAll(){
+		dao.deletAll();
+		
+		dao.add(user1);
+		List<User> users1 = dao.getAll();
+		assertThat(users1.size(), is(1));
+		checkSameUser(user1, users1.get(0));
+		
+		dao.add(user2);
+		List<User> users2 = dao.getAll();
+		assertThat(users2.size(), is(2));
+		checkSameUser(user2, users2.get(0));
+		checkSameUser(user1, users2.get(1));
+		
+		dao.add(user3);
+		List<User> users3 = dao.getAll();
+		assertThat(users3.size(), is(3));
+		checkSameUser(user3, users3.get(0));
+		checkSameUser(user2, users3.get(1));
+		checkSameUser(user1, users3.get(2));
+		
+		
+		
+	}
+	
+	private void checkSameUser(User user1 , User user2){
+		assertThat(user1.getId(), is(user2.getId()));
+		assertThat(user1.getName(), is(user2.getName()));
+		assertThat(user1.getPass(), is(user2.getPass()));
+	}
 }
